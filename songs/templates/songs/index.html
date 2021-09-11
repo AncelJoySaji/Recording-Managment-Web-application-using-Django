@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<head>
+    <title>Recording Studio </title>
+    <script type="text/javascript">
+      function validate(form) {
+      if(form.name=="studioDeleteSongs"){
+          let songTitle=form.elements[0].value;     
+          return confirm("Are you sure you want to delete song '"+songTitle+"'");
+      }else if(form.name="studioDeleteAlbums"){
+          let albumTitle=form.elements[0].value;     
+          return confirm("Are you sure you want to delete album '"+albumTitle+"'");
+      }
+    }
+      </script>
+</head>
+<style>
+
+body, html {
+	margin: 0;	
+}
+
+.widthClass{
+  margin-left: 5vw;
+  margin-right: 5vw;
+  width: 74%;
+
+}
+.menu{
+	background-color: #FBF8F8;
+	margin-top: 40px;	
+	background-repeat: repeat;
+}
+.bg {
+  background: #960018;
+
+  /* Center and scale the image nicely */
+  background-repeat: repeat;
+  background-size:cover;
+}
+
+h1{
+
+color:#FAFAFA;
+font-size: 60px;
+
+
+}
+h2{
+
+color:#FAFAFA;
+margin: 20px;	
+
+
+}
+div{
+  display: inline;
+}
+h3{
+
+color:#FAFAFA;
+margin: 20px;	
+font-size: 20px;
+
+
+}
+fieldset{	
+border-color:#FAFAFA;
+width: 74%;
+}
+
+p{
+color:#FAFAFA;
+font-size: 20px;
+}
+li{
+color:#FAFAFA;
+font-size: 20px;
+margin-left:10px; 	
+}
+body{
+  margin: 20px;
+}
+p1{
+color:#FAFAFA;
+font-size: 21px;	
+margin-left: -25px;
+}
+table, th, td {
+  border: 1px solid white;
+  border-collapse: collapse;
+  margin: 40px;
+  margin-bottom: 50px;
+}
+ td {
+  text-align: left;  
+  color:#FAFAFA;
+  padding: 25px;
+  font-size: 1.5vw;
+}
+th {
+  text-align: left;  
+  color:#FAFAFA;
+  background-color: darkblue;
+  font-size: 2vw;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-style:oblique;
+  padding: 18px;
+}
+
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 123x;
+  background-color: black;
+  color: #fff;
+  font-size:15px;
+  text-align: center;
+  border-radius: 7px;
+  padding: 8px 0;
+
+  /* Position the tooltip */
+  position:fixed;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  
+}
+.buttonClass{
+background-color: #FBF8F8;
+min-height:50px;
+min-width:90px;
+font-size: 19px;
+padding: 10px;
+color: #960018;
+margin:auto;
+
+border: none;
+cursor: pointer;
+}
+</style>
+<body class="bg" onload="startTime()" >
+ 
+ {% load static %}
+ 
+  <h1 style="display: inline;">Recording Studio</h1>
+ <h2 style="display: inline;float: right;" id="txt"></h2>
+  <br>
+ <center>
+  <div class="tooltip"  >
+    <a  id="studio" onclick="detect(this.id)" style="display: inline; " > 
+      <img  src="{% static 'media/studio.jpg' %}" style="display: inline;width:100px;height:90px; margin: 10px;" alt="Special admin controls">
+  </a>
+  <span class="tooltiptext">View songs</span>
+    </div>
+    
+    <div class="tooltip"  >
+      <a  id="albumImg" onclick="detect(this.id)"> 
+        <img  src="{% static 'media/album.png' %}" style="display: inline;width:100px;height:90px; margin: 10px;" alt="Special admin controls">
+    </a>
+    <span class="tooltiptext">View albums</span>
+  </div>
+
+  <div class="tooltip"  >
+    <a  id="addAlbumImg" onclick="detect(this.id)" style="display: inline; " > 
+      <img src="{% static 'media/add-album.png' %}" style="width:100px;height:90px; margin: 10px;" alt="Special admin controls">
+  </a>
+  <span class="tooltiptext">Add or delete<br> albums</span>
+</div>
+  
+<div class="tooltip"  >
+  <a   id="access" style=" align-self: right;"> 
+    <img  src="{% static 'media/access.jpg' %}" style="width:100px;height:90px; margin: 10px;" alt="Special admin controls">
+  </a>
+    <span class="tooltiptext">Access Admin controls</span>
+  </div>
+</center>
+  <br><br>
+  <!--Forms-->
+  
+  <fieldset>
+    <legend><h2>Add songs form</h2></legend>
+<form name="songAddForm" action="studioSongs" >
+  <h3>
+<label for="song_title">Song title:</label>
+ <input type="text" id="song_title" name="song_title" required>
+ <br><br>
+ <label for="song_author">Song author:</label>
+ <input type="text" id="song_author" name="song_author" required>
+ <br><br>
+<label for="song_album">Choose song album:</label>
+<select name="song_album" id="song_album">
+<option value="none">   </option>
+  {% for Album in albums %}
+      <option value="{{Album.Album_title}}">{{Album.Album_title}}</option>
+  {% endfor %}
+</select>
+<br><br>
+</h3>
+<center><input id="SongAddSubmit" onclick="detect(this.id)" class="buttonClass" type="submit" value="Add song"></center>
+</form>
+</fieldset>
+
+
+
+<fieldset>
+  <legend><h2>Delete songs form</h2></legend>
+<form name="studioDeleteSongs" action="studioDeleteSongs" onsubmit="return validate(this)">
+<h3>
+<br><br>
+<label for="song_title">Choose song to delete:</label>
+<select name="song_title" id="song_title" required>
+  <option value="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--</option>
+{% for Song in songs %}
+    <option value="{{Song.Song_title}}">{{Song.Song_title}}</option>
+{% endfor %}
+</select>
+<br><br>
+</h3>
+<center><input id="SongDelSubmit" onclick="detect(this.id)" class="buttonClass" type="submit" value="Delete song"></center>
+</form>
+</fieldset>
+
+
+<br><br>
+<hr>
+<fieldset>
+  <legend><h2 id="addAlbum">Add albums form</h2></legend>
+<form action="studioAlbums" >
+  <h3>
+<label for="album_title">Album title:</label>
+ <input type="text" id="album_title" name="album_title" required>
+ <br><br>
+<label for="album_format">Album format:</label>
+<select name="album_format" id="album_format" >
+<option value="mp3">mp3</option>
+<option value="mp3">mp3</option>
+<option value="m4a">m4a</option>
+<option value="wav">wav</option>
+<option value="AIFF">AIFF</option>
+</select>
+<br><br>
+<label for="album_cpyD">Album Copyright Date:</label>
+ <input type="date" id="album_cpyD" name="album_cpyD" required>
+ <br><br>
+</h3>
+<center><input id="AlbumAddSubmit" onclick="detect(this.id)" class="buttonClass" type="submit" value="Add album"></center>
+</form>
+</fieldset>
+
+<fieldset>
+  <legend><h2>Delete albums form</h2></legend>
+<form name="studioDeleteAlbums" action="studioDeleteAlbums" onsubmit="return validate(this)">
+  <h3>
+    <label for="album_title">Choose album to delete:</label>
+    <select name="album_title" id="album_title" required>
+      <option value="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--</option>
+      {% for Album in albums %}
+          <option value="{{Album.Album_title}}">{{Album.Album_title}}</option>
+      {% endfor %}
+    </select>
+    <br><br>
+</h3>
+<center><input id="AlbumDelSubmit" onclick="detect(this.id)" class="buttonClass" type="submit" value="Delete album"></center>
+</form>
+</fieldset>
+
+<br><br>
+<hr>
+<script type="text/javascript">
+var str=location.href;
+var count=0;
+var siz=0;
+for (var i = 0; i < str.length; i++) {
+  if(str.charAt(i)=='/'){
+    ++count;
+    if(count==3){
+      siz=i;
+      break;
+    }
+  }
+    }
+    var res = str.substring(0, siz);
+    document.getElementById("access").href=res+"/admin";
+    document.getElementById("studio").href=res+"/studio";
+    document.getElementById("albumImg").href=res+"/studio";
+    function detect(id){
+      if(id=="addAlbumImg"){
+        document.getElementById( 'addAlbum').scrollIntoView();
+      }else if(id=="albumImg"){
+   localStorage.setItem("storageName","Album");
+      }else if(id=="studio"){
+        localStorage.setItem("storageName","Song");
+      }else if(id=="SongAddSubmit"||id=="SongDelSubmit"){
+        localStorage.setItem("storageName","Song");
+      }else if(id=="AlbumAddSubmit"||id=="AlbumDelSubmit"){
+        localStorage.setItem("storageName","Album");
+      }
+    }
+    
+  function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML =
+   "Time:- "+ h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 1000);
+  }
+  function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+  }
+    </script>
+</body>
+</html>

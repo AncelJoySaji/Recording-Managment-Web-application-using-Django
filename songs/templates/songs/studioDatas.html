@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<head>
+    <title>Recording Studio </title>
+</head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;1,300&display=swap');
+body, html {
+	margin: 0;	
+}
+@font-face {
+  font-family: OpenSans-Regular;
+  src:url(OpenSans-Regular.ttf);
+  font-weight: 50000;
+}
+@font-face {
+  font-family: OpenSans-Light;
+  src:url(OpenSans-Light.ttf);
+  font-weight: 50000;
+}
+.widthClass{
+  margin-left: 5vw;
+  margin-right: 5vw;
+  width: 74%;
+
+}
+.menu{
+	background-color: #FBF8F8;
+	margin-top: 40px;	
+	background-repeat: repeat;
+}
+.bg {
+  background: #960018;
+
+  /* Center and scale the image nicely */
+  background-repeat: repeat;
+  background-size:cover;
+}
+
+h1{
+
+color:#FAFAFA;
+font-family: OpenSans-Regular;	
+font-size: 60px;
+margin: 25px;	
+
+}
+h2{
+
+color:#FAFAFA;
+font-family: OpenSans-Regular;
+margin: 20px;	
+
+
+}
+fieldset{	
+border-color:#FAFAFA;
+width: 74%;
+}
+
+p{
+color:#FAFAFA;
+font-family: OpenSans-Light;
+font-size: 20px;
+}
+li{
+color:#FAFAFA;
+font-family: OpenSans-Light;
+font-size: 20px;
+margin-left:10px; 	
+}
+p1{
+color:#FAFAFA;
+font-family: OpenSans-Regular;
+font-size: 21px;	
+margin-left: -25px;
+}
+table, th, td {
+  border: 1px solid white;
+  border-collapse: collapse;
+  margin: 40px;
+  margin-bottom: 50px;
+}
+ td {
+  text-align: left;  
+  color:#FAFAFA;
+  padding: 25px;
+  font-size: 1.5vw;
+  font-family: OpenSans-Regular;	
+}
+th {
+  text-align: left;  
+  color:#FAFAFA;
+  background-color: darkblue;
+  font-size: 2vw;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-style:oblique;
+  padding: 18px;
+  font-family: OpenSans-Regular;	
+}
+.buttonClass{
+background-color: #FBF8F8;
+min-height:50px;
+min-width:90px;
+font-family: 'Open Sans';
+font-size: 19px;
+padding: 5px;
+color: #960018;
+margin:auto;
+width:5vw;
+
+border: none;
+cursor: pointer;
+}
+</style>
+<body class="bg" onload="startTime()" >
+  <br>
+  <h1 style="display: inline;">Recording Studio</h1>
+  &ensp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+  <h2 style="display: inline; text-align: right;" id="txt"></h2>
+
+  <!--Forms-->
+  <center>
+<div class="menu">
+	<button class="buttonClass" id="Songs" onclick="detect(this.id)"  type="text">Songs</button>
+	<button class="buttonClass" id="Albums" onclick="detect(this.id)"  type="text">Albums</button>
+</div>
+</center>
+<song id="SongDiv">
+<h2 id="SongTable" >Songs already recorded :</h2>
+<fieldset style=" margin-left:40px; ">
+  <legend><h2>Modify songs listings</h2></legend>
+<h2 ><a id="SongAddHREF" onclick="detect(this.id)" style="color: white; margin-left: 25vw;" >Add another song</a></h2>
+<h2 ><a id="SongDelHREF" onclick="detect(this.id)" style="color: white; margin-left: 25vw;" >Delete song</a></h2>
+</fieldset>
+<center>
+<table id="SongTable">
+    <tr>
+        <th>Song title</th>
+        <th>Song album</th>
+        <th>Song author</th>
+        <th>Song ID</th>
+    </tr>
+    {% for Song in songs %}
+    <tr>
+        <td>{{Song.Song_title}}</td>
+        <td>{{Song.Song_album.Album_title}}</td>
+        <td>{{Song.Song_Author}}</td>
+        <td>{{Song.id}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<hr>
+</center>
+</song>
+<album id="AlbumDiv">
+<h2 id="AlbumTable">Albums already added :</h2>
+<fieldset style=" margin-left:40px; ">
+  <legend><h2>Modify albums listings</h2></legend>
+  
+<h2 ><a id="AlbumAddHREF" onclick="detect(this.id)" style="color: white; margin-left: 25vw;" >Add new album</a></h2>
+<h2 ><a id="AlbumDelHREF" onclick="detect(this.id)" style="color: white; margin-left: 25vw;" >Delete album</a></h2>
+</fieldset>
+<center>
+<table >
+  <tr>
+    <th>Album title</th>
+      <th>Album format</th>
+      <th>Album copyright date</th>
+      <th>Album ID</th>
+  </tr>
+  {% for Album in albums %}
+  <tr>
+      <td>{{Album.Album_title}}</td>
+      <td>{{Album.Album_format}}</td>
+      <td>{{Album.CopyRight_Date}}</td>
+      <td>{{Album.id}}</td>
+  </tr>
+  {% endfor %}
+</table>
+</center>
+</album>
+<script type="text/javascript">
+if(localStorage.getItem("storageName")=="Album"){
+detect("Albums");
+}else if(localStorage.getItem("storageName")=="Song"){
+  detect("Songs");
+}
+var str=location.href;
+var count=0;
+var siz=0;
+for (var i = 0; i < str.length; i++) {
+  if(str.charAt(i)=='/'){
+    ++count;
+    if(count==3){
+      siz=i;
+      break;
+    }
+  }
+}
+var res = str.substring(0, siz);
+document.getElementById("SongDelHREF").href=res;
+document.getElementById("SongAddHREF").href=res;
+document.getElementById("AlbumAddHREF").href=res;
+document.getElementById("AlbumDelHREF").href=res;
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('txt').innerHTML =
+ "Time:- "+ h + ":" + m + ":" + s;
+  var t = setTimeout(startTime, 1000);
+}
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+
+  function detect(id){
+    if(id=="Songs"){
+      document.getElementById("AlbumDiv").style.display = "none";
+      document.getElementById("SongDiv").style.display = "block";
+      document.getElementById("Songs").style="background: green;color:#FAFAFA;";
+      document.getElementById("Albums").style="background:#FAFAFA ;color:#960018;";
+    }else if(id=="Albums"){
+      document.getElementById("SongDiv").style.display = "none";
+      document.getElementById("AlbumDiv").style.display = "block";
+
+      document.getElementById("Songs").style="background:#FAFAFA ;color:#960018;";
+      document.getElementById("Albums").style="background: green;color:#FAFAFA;";
+    }
+  }
+  </script>
+</body>
+
+</html>
